@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huashang.core.mapper.AdminsMapper">
+  <resultMap id="BaseResultMap" type="Admins">
+    <id column="admin_id" jdbcType="VARCHAR" property="adminId" />
+    <result column="admin_username" jdbcType="VARCHAR" property="adminUsername" />
+    <result column="admin_password" jdbcType="VARCHAR" property="adminPassword" />
+  </resultMap>
+  
+  <sql id="adminsColumns">
+  	admin_id, admin_username, admin_password
+  </sql>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from `admins`
+    where admin_id = #{adminId,jdbcType=VARCHAR}
+  </delete>
+  
+  <insert id="insert" keyColumn="admin_id" keyProperty="adminId" parameterType="Admins" useGeneratedKeys="true">
+    insert into `admins` (admin_id, admin_username, admin_password)
+    values (#{adminId,jdbcType=VARCHAR}, #{adminUsername,jdbcType=VARCHAR}, #{adminPassword,jdbcType=VARCHAR})
+  </insert>
+  
+  <update id="updateByPrimaryKey" parameterType="Admins">
+    update `admins`
+    set username = #{username,jdbcType=VARCHAR},
+      password = #{password,jdbcType=VARCHAR},
+      power = #{power,jdbcType=INTEGER},
+      power_field = #{powerField,jdbcType=LONGVARCHAR}
+    where admin_id = #{adminId,jdbcType=VARCHAR}
+  </update>
+  
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+	<include refid="adminsColumns"/>
+    from `admins`
+    where admin_id = #{adminId,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="selectByUsername" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="adminsColumns"/>
+    from `admins`
+    where `admin_username` = #{adminUsername,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="selectAll" resultMap="BaseResultMap">
+    select 
+	<include refid="adminsColumns"/>
+    from `admins`
+  </select>
+</mapper>

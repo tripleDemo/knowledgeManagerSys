@@ -1,0 +1,524 @@
+{
+	"info": {
+		"_postman_id": "1db072b8-e977-4300-ac66-45ab6a081265",
+		"name": "knowledge",
+		"description": "企业知识库管理系统接口",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "验证码获取并存缓存",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"email\": \"2193522791@qq.com\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/knowledge/get/code",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"knowledge",
+						"get",
+						"code"
+					]
+				},
+				"description": "\nhttp://localhost:8080/knowledge/get/code"
+			},
+			"response": []
+		},
+		{
+			"name": "用户注册",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"email\": \"2193522791@qq.com\",\n\t\"username\": \"钢铁侠\",\n\t\"password\": \"123456\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/knowledge/register?code=qHAZi",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"knowledge",
+						"register"
+					],
+					"query": [
+						{
+							"key": "code",
+							"value": "qHAZi"
+						}
+					]
+				},
+				"description": "\nhttp://localhost:8080/knowledge/register?code=qHAZi"
+			},
+			"response": []
+		},
+		{
+			"name": "用户登录",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"username\": \"钢铁侠\",\n\t\"password\": \"123456\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/knowledge/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"knowledge",
+						"login"
+					]
+				},
+				"description": "\nhttp://localhost:8080/knowledge/login"
+			},
+			"response": []
+		},
+		{
+			"name": "找回密码-验证码(忽略大小写)校验成功则修改用户密码，否则修改失败",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"code\":\"qhAZi\",\n\t\"newPassword\":\"123456\",\n\t\"email\":\"2193522791@qq.com\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/knowledge/retrieve",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"knowledge",
+						"retrieve"
+					]
+				},
+				"description": "\r\nhttp://localhost:8080/knowledge/retrieve"
+			},
+			"response": []
+		},
+		{
+			"name": "根据用户名模糊查询分页获取用户数据(执行此操作的管理员需携带token)",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIxIiwic3ViIjoiYWRtaW4iLCJpYXQiOjE1NzkzMTg1MDcsInJvbGVzIjoiYWRtaW4iLCJleHAiOjE1Nzk5MjMzMDd9.KxOEHBiZoAeh3yvZ7-FSUEpKRPP-YiQ4yJKTHs2DMfI",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8080/knowledge/user/1/3/n",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"knowledge",
+						"user",
+						"1",
+						"3",
+						"n"
+					]
+				},
+				"description": "http://localhost:8080/knowledge/user/1/3/n"
+			},
+			"response": []
+		},
+		{
+			"name": "添加评论(用户需携带token)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIwYzJjN2Y2ZC01MDY5LTRmNTYtODE3OC04MGIwOGRlNWIwN2EiLCJzdWIiOiLpkqLpk4HkvqAiLCJpYXQiOjE1NzkzNDI5MzQsInJvbGVzIjoidXNlciIsImV4cCI6MTU3OTk0NzczNH0.9jkOtYCnadWh-9NQss_mS5o4mjo2h2e-MMkFQZFCk1E",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"commentContent\": \"获益匪浅，很不错的视频\",\n\t\"videoId\": \"a3c14ebc-45cd-425b-a2b7-4fc2eb0d3f5b\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/knowledge/comment/video",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"knowledge",
+						"comment",
+						"video"
+					]
+				},
+				"description": "http://localhost:8080/knowledge/comment/video"
+			},
+			"response": []
+		},
+		{
+			"name": "删除评论(用户需携带token)",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIxIiwic3ViIjoianVuIiwiaWF0IjoxNTc5MzQyNjg4LCJyb2xlcyI6InVzZXIiLCJleHAiOjE1Nzk5NDc0ODh9.91UpW2c3TcoGbp4YZa_z7mJeuxRAGhAXlwN9KB6CoSE",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8080/knowledge/comment/delete?commentId=d9a8e519-30e5-4671-a46a-08142112677e",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"knowledge",
+						"comment",
+						"delete"
+					],
+					"query": [
+						{
+							"key": "commentId",
+							"value": "d9a8e519-30e5-4671-a46a-08142112677e"
+						}
+					]
+				},
+				"description": "\nhttp://localhost:8080/knowledge/comment/delete?commentId=d9a8e519-30e5-4671-a46a-08142112677e"
+			},
+			"response": []
+		},
+		{
+			"name": "根据评论内容模糊查询分页获取评论数据(执行此操作的管理员或用户需携带token)",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIwYzJjN2Y2ZC01MDY5LTRmNTYtODE3OC04MGIwOGRlNWIwN2EiLCJzdWIiOiLpkqLpk4HkvqAiLCJpYXQiOjE1NzkzNDI5MzQsInJvbGVzIjoidXNlciIsImV4cCI6MTU3OTk0NzczNH0.9jkOtYCnadWh-9NQss_mS5o4mjo2h2e-MMkFQZFCk1E",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8080/knowledge/comment/1/3/oo",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"knowledge",
+						"comment",
+						"1",
+						"3",
+						"oo"
+					]
+				},
+				"description": "http://localhost:8080/knowledge/comment/1/3/oo"
+			},
+			"response": []
+		},
+		{
+			"name": "管理员登录",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"username\": \"admin\",\n\t\"password\": \"123456\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/knowledge/admin/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"knowledge",
+						"admin",
+						"login"
+					]
+				},
+				"description": "http://localhost:8080/knowledge/admin/login"
+			},
+			"response": []
+		},
+		{
+			"name": "添加视频(执行此操作的管理员需携带token)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIxIiwic3ViIjoiYWRtaW4iLCJpYXQiOjE1NzkzMTg1MDcsInJvbGVzIjoiYWRtaW4iLCJleHAiOjE1Nzk5MjMzMDd9.KxOEHBiZoAeh3yvZ7-FSUEpKRPP-YiQ4yJKTHs2DMfI",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"videoUrl\": \"blob:https://www.bilibili.com/13ba6fbe-01ad-4a62-a1af-b8cf877127d0\",\n\t\"videoImage\": \"http://a4.att.hudong.com/21/09/01200000026352136359091694357.jpg\",\n\t\"videoTitle\": \"3毛钱特效\",\n\t\"videoDes\": \"特效小视频，快来看看吧！\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/knowledge/video/add",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"knowledge",
+						"video",
+						"add"
+					]
+				},
+				"description": "\nhttp://localhost:8080/knowledge/video/add"
+			},
+			"response": []
+		},
+		{
+			"name": "修改视频(执行此操作的管理员需携带token)",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIxIiwic3ViIjoianVuIiwiaWF0IjoxNTc5MzMwMTk5LCJyb2xlcyI6InVzZXIiLCJleHAiOjE1Nzk5MzQ5OTl9.QapP6pOF7ZMpKrXQhu70bub2826p8kK0wqD6AUfxy4c",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"videoId\": \"a3c14ebc-45cd-425b-a2b7-4fc2eb0d3f5b\",\n\t\"videoTitle\": \"5毛钱特效\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/knowledge/video/update",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"knowledge",
+						"video",
+						"update"
+					]
+				},
+				"description": "http://localhost:8080/knowledge/video/update"
+			},
+			"response": []
+		},
+		{
+			"name": "删除视频(执行此操作的管理员需携带token)",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIxIiwic3ViIjoiYWRtaW4iLCJpYXQiOjE1NzkzMTg1MDcsInJvbGVzIjoiYWRtaW4iLCJleHAiOjE1Nzk5MjMzMDd9.KxOEHBiZoAeh3yvZ7-FSUEpKRPP-YiQ4yJKTHs2DMfI",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8080/knowledge/video/delete?videoId=6bdcb637-a288-4308-a97b-9b756ee2c9cb",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"knowledge",
+						"video",
+						"delete"
+					],
+					"query": [
+						{
+							"key": "videoId",
+							"value": "6bdcb637-a288-4308-a97b-9b756ee2c9cb"
+						}
+					]
+				},
+				"description": "http://localhost:8080/knowledge/video/delete?videoId=6bdcb637-a288-4308-a97b-9b756ee2c9cb"
+			},
+			"response": []
+		},
+		{
+			"name": "根据视频名称模糊查询分页获取用户数据(执行此操作的管理员或用户需携带token)",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIxIiwic3ViIjoiYWRtaW4iLCJpYXQiOjE1NzkzMzAyMjIsInJvbGVzIjoiYWRtaW4iLCJleHAiOjE1Nzk5MzUwMjJ9.AaSAfb8Y42NHwGg2bclR4I7Vec3697gFbM1RP09uBXw",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8080/knowledge/video/1/3/%E7%89%B9%E6%95%88",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"knowledge",
+						"video",
+						"1",
+						"3",
+						"%E7%89%B9%E6%95%88"
+					]
+				},
+				"description": "\nhttp://localhost:8080/knowledge/video/1/3/%E7%89%B9%E6%95%88"
+			},
+			"response": []
+		},
+		{
+			"name": "根据视频id获取视频及评论数据(用户需携带token)",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIwYzJjN2Y2ZC01MDY5LTRmNTYtODE3OC04MGIwOGRlNWIwN2EiLCJzdWIiOiLpkqLpk4HkvqAiLCJpYXQiOjE1NzkzNDg5OTUsInJvbGVzIjoidXNlciIsImV4cCI6MTU3OTk1Mzc5NX0.DzbnG0YU65XZHT0uSsS3KtRkAppco6d6AG-F6uQVI_g",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8080/knowledge/video?videoId=a3c14ebc-45cd-425b-a2b7-4fc2eb0d3f5b",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"knowledge",
+						"video"
+					],
+					"query": [
+						{
+							"key": "videoId",
+							"value": "a3c14ebc-45cd-425b-a2b7-4fc2eb0d3f5b"
+						}
+					]
+				},
+				"description": "\nhttp://localhost:8080/knowledge/video?videoId=a3c14ebc-45cd-425b-a2b7-4fc2eb0d3f5b"
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}

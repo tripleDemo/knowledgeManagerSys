@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xmlns:tx="http://www.springframework.org/schema/tx"
+    xmlns:p="http://www.springframework.org/schema/p"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop.xsd
+        http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx.xsd">
+    
+    <!-- spring的配置文件，这里主要配置和业务逻辑有关的 -->
+        
+    <!-- IoC注解解析器 -->
+    <context:component-scan base-package="com.huashang">
+    	<!-- 扫描除了控制器不要，其他的业务逻辑都要 -->
+    	<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+    </context:component-scan> 
+     	<!-- SpringMVC上传文件 -->
+	<bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<property name="defaultEncoding" value="UTF-8" />
+		<!-- 单位为B，10M=10*1024*1024=10485760指定所上传文件的总大小不能超过200KB。注意maxUploadSize属性的限制不是针对单个文件，而是所有文件的容量之和 -->
+		<property name="maxUploadSize" value="1048576000" />
+	</bean>
+	<!-- Spring配置文件的核心点(数据源、与mybatis的整合，事务控制) -->
+    
+   	<!-- ===============================druid 数据源================================= -->
+	<context:property-placeholder location="classpath:properties/db.properties,classpath:properties/redis.properties"/>
+	
+	<!-- 配置一个druid的连接池 -->
+    <bean id="pooledDataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+    	<property name="driverClassName" value="${jdbc.driverClassName}"/>
+		<property name="url" value="${jdbc.url}"/>
+		<property name="username" value="${jdbc.username}"/>
+		<property name="password" value="${jdbc.password}"/>
+    </bean>
+    <!-- ============================================================================= -->
+    
+    <!-- ==========================配置和MyBatis的整合================================= -->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+    	<!-- 指定mybatis全局配置文件的位置 -->
+    	<property name="configLocation" value="classpath:mybatis-config.xml"></property>
+    	<property name="dataSource" ref="pooledDataSource"></property>
+    	<!-- 指定mybatis的mapper文件的位置 -->
+    	<property name="mapperLocations" value="classpath:mapper/*.xml"></property>
+    </bean>
+
+	<!-- 配置扫描器，将mybatis接口的实现加入到ioc容器中 -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<!-- 扫描所有mapper接口的实现，加入到ioc容器中 -->
+		<property name="basePackage" value="com.huashang.core.mapper"></property>
+		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></property>
+	</bean>
+	<!-- ============================================================================= -->
+	
+	<!-- ============================事务控制的配置==================================== -->
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<!-- 控制住数据源 -->
+		<property name="dataSource" ref="pooledDataSource"></property>
+	</bean>
+	<!-- 配置事务增强，事务如何切入 -->
+	<tx:advice id="txAdvice" transaction-manager="transactionManager">
+		<tx:attributes>
+			<!-- 所有方法都是事务方法 -->
+			<tx:method name="*"/>
+		</tx:attributes>
+	</tx:advice>
+	<!-- 开启基于注解的事务 -->
+	<aop:config>
+		<!-- 切入点表达式 -->
+		<aop:pointcut expression="execution(* com.huashang.core.service.*.*(..))" id="txPoint"/>
+		<!-- 配置事务增强 -->
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="txPoint"/>
+	</aop:config>
+	<!-- ============================================================================= -->
+	
+	<!-- ==========================配置 email 工具类================================= -->
+    <bean id="emailUtil" class="com.huashang.common.utils.EmailUtil">
+    	<property name="codeLen" value="5"></property>
+    	<property name="qq" value=""></property>
+    	<property name="toSendEmail" value=""></property>
+    	<property name="sender" value="知识库系统"></property>
+    	<property name="authPwd" value=""></property>
+    	<property name="title" value="知识库系统验证码"></property>
+	</bean>
+	<!-- ============================================================================= -->
+
+	<!-- 配置 Spring Security -->
+     <bean id="bCryptPasswordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"></bean>
+    
+    <!-- ==========================配置 JWTUtil 工具类================================= -->
+	<bean id="jWTUtil" class="com.huashang.common.utils.JWTUtil">
+        <constructor-arg index="0" value="student"></constructor-arg>    
+    	<!-- 设置过期时间为24小时 -->
+        <constructor-arg index="1" value="604800000" type="long"></constructor-arg>    
+    </bean>
+	<!-- ============================================================================= -->
+
+	<!-- redis配置 -->
+    <import resource="spring-redis.xml"/>
+</beans>

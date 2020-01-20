@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huashang.core.mapper.CommentsMapper">
+  <resultMap id="BaseResultMap" type="Comments">
+    <id column="comment_id" jdbcType="VARCHAR" property="commentId" />
+    <result column="comment_content" jdbcType="VARCHAR" property="commentContent" />
+    <result column="created_at" jdbcType="TIMESTAMP" property="createdAt" />
+    <result column="video_id" jdbcType="VARCHAR" property="videoId" />
+    <result column="user_id" jdbcType="VARCHAR" property="userId" />
+  </resultMap>
+  
+  <resultMap id="CommentDtoMap" type="com.huashang.core.dto.CommentDto">
+    <id column="comment_id" jdbcType="VARCHAR" property="commentId" />
+    <result column="comment_content" jdbcType="VARCHAR" property="commentContent" />
+    <result column="created_at" jdbcType="TIMESTAMP" property="createdAt" />
+    <result column="video_id" jdbcType="VARCHAR" property="videoId" />
+    <result column="username" jdbcType="VARCHAR" property="username" />
+  </resultMap>
+  
+  <sql id="commentsColumns">
+  	comment_id, comment_content, created_at, video_id, user_id
+  </sql>
+  
+  <sql id="CommentDtoColumns">
+  	comment_id, comment_content, `comments`.created_at, video_id, username
+  </sql>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from `comments`
+    where comment_id = #{commentId,jdbcType=VARCHAR}
+  </delete>
+  
+  <insert id="insert" keyColumn="comment_id" keyProperty="commentId" parameterType="Comments" useGeneratedKeys="true">
+    insert into `comments` (comment_id, comment_content, created_at, video_id, user_id)
+    values (#{commentId,jdbcType=VARCHAR}, #{commentContent,jdbcType=VARCHAR}, #{createdAt,jdbcType=TIMESTAMP}, 
+      #{videoId,jdbcType=VARCHAR}, #{userId,jdbcType=VARCHAR})
+  </insert>
+  
+  <update id="updateByPrimaryKey" parameterType="Comments">
+    update `comments`
+    set comment_content = #{commentContent,jdbcType=VARCHAR},
+      created_at = #{createdAt,jdbcType=TIMESTAMP},
+      video_id = #{videoId,jdbcType=VARCHAR},
+      user_id = #{userId,jdbcType=VARCHAR}
+    where comment_id = #{commentId,jdbcType=VARCHAR}
+  </update>
+  
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+	<include refid="commentsColumns"/>
+    from `comments`
+    where comment_id = #{commentId,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="selectAll" resultMap="BaseResultMap">
+    select 
+	<include refid="commentsColumns"/>
+    from `comments`
+  </select>
+  
+  <select id="likeByCommentContent" resultMap="CommentDtoMap">
+    select
+	<include refid="CommentDtoColumns"/>
+    from `comments`
+    left join `users` on `comments`.user_id = `users`.user_id
+    <where>
+    	<if test="commentContent != null">
+    		comment_content like concat('%',#{commentContent},'%')
+  		</if>
+  		order by created_at DESC
+    	<if test="start!=null and pageSize!=null">
+    		LIMIT #{start},#{pageSize}
+  		</if>
+    </where>
+  </select>
+  
+  <select id="selectByVideoId" resultMap="CommentDtoMap">
+    select
+	<include refid="CommentDtoColumns"/>
+    from `comments`
+    left join `users` on `comments`.user_id = `users`.user_id
+    where video_id = #{videoId,jdbcType=VARCHAR} order by created_at DESC
+  </select>
+  
+</mapper>

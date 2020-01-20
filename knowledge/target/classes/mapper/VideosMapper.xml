@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huashang.core.mapper.VideosMapper">
+  <resultMap id="BaseResultMap" type="Videos">
+    <id column="video_id" jdbcType="VARCHAR" property="videoId" />
+    <result column="video_url" jdbcType="VARCHAR" property="videoUrl" />
+    <result column="video_title" jdbcType="VARCHAR" property="videoTitle" />
+    <result column="video_image" jdbcType="VARCHAR" property="videoImage" />
+    <result column="created_at" jdbcType="TIMESTAMP" property="createdAt" />
+    <result column="updated_at" jdbcType="TIMESTAMP" property="updatedAt" />
+    <result column="admin_id" jdbcType="VARCHAR" property="adminId" />
+    <result column="video_des" jdbcType="LONGVARCHAR" property="videoDes" />
+  </resultMap>
+  
+  <resultMap id="VideoDtoMap" type="com.huashang.core.dto.VideoDto">
+    <id column="video_id" jdbcType="VARCHAR" property="videoId" />
+    <result column="video_title" jdbcType="VARCHAR" property="videoTitle" />
+    <result column="video_image" jdbcType="VARCHAR" property="videoImage" />
+    <result column="created_at" jdbcType="TIMESTAMP" property="createdAt" />
+    <result column="updated_at" jdbcType="TIMESTAMP" property="updatedAt" />
+    <result column="admin_username" jdbcType="VARCHAR" property="adminUsername" />
+  </resultMap>
+  
+  <resultMap id="VideoDetailDtoMap" type="com.huashang.core.dto.VideoDetailDto" extends="VideoDtoMap">
+    <result column="video_url" jdbcType="VARCHAR" property="videoUrl" />
+    <result column="video_des" jdbcType="VARCHAR" property="videoDes" />
+    <collection property="comment" ofType="com.huashang.core.dto.CommentDto" 
+		select="com.huashang.core.mapper.CommentsMapper.selectByVideoId" column="video_id"/>
+  </resultMap>
+  
+  <sql id="videosColumns">
+  	video_id, video_url, video_title, video_image, created_at, updated_at, admin_id, 
+    video_des
+  </sql>
+  
+  <sql id="videoDtoColumns">
+  	video_id, video_title, video_image, created_at, updated_at, admin_username
+  </sql>
+  
+  <sql id="videoDetailDtoColumns">
+  	video_id, video_url, video_title, video_image, created_at, updated_at, video_des, admin_username
+  </sql>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from `videos`
+    where video_id = #{videoId,jdbcType=VARCHAR}
+  </delete>
+  
+  <insert id="insert" keyColumn="video_id" keyProperty="videoId" parameterType="Videos" useGeneratedKeys="true">
+    insert into `videos` (video_id, video_url, video_title, video_image, 
+      created_at, updated_at, admin_id, 
+      video_des)
+    values (#{videoId,jdbcType=VARCHAR}, #{videoUrl,jdbcType=VARCHAR}, #{videoTitle,jdbcType=VARCHAR}, 
+      #{videoImage,jdbcType=VARCHAR}, #{createdAt,jdbcType=TIMESTAMP}, #{updatedAt,jdbcType=TIMESTAMP}, 
+      #{adminId,jdbcType=VARCHAR}, #{videoDes,jdbcType=LONGVARCHAR})
+  </insert>
+  
+  <update id="updateByPrimaryKey" parameterType="Videos">
+    update `videos`
+    <set>
+    	<if test="videoUrl != null and videoUrl != ''">
+    		video_url = #{videoUrl,jdbcType=VARCHAR},
+  		</if>
+  		<if test="videoTitle != null and videoTitle != ''">
+    		video_title = #{videoTitle,jdbcType=VARCHAR},
+  		</if>
+  		<if test="videoImage != null and videoImage != ''">
+    		video_image = #{videoImage,jdbcType=VARCHAR},
+  		</if>
+    	<if test="createdAt != null">
+    		created_at = #{createdAt,jdbcType=TIMESTAMP},
+  		</if>
+  		<if test="updatedAt != null">
+    		updated_at = #{updatedAt,jdbcType=TIMESTAMP},
+  		</if>
+  		<if test="adminId != null and adminId != ''">
+    		admin_id = #{adminId,jdbcType=VARCHAR},
+  		</if>
+  		<if test="videoDes != null and videoDes != ''">
+    		video_des = #{videoDes,jdbcType=LONGVARCHAR},
+  		</if>
+    </set>
+    where video_id = #{videoId,jdbcType=VARCHAR}
+  </update>
+  
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+	<include refid="videosColumns"/>
+    from `videos`
+    where video_id = #{videoId,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="selectAll" resultMap="BaseResultMap">
+    select 
+	<include refid="videosColumns"/>
+    from `videos`
+  </select>
+  
+  <select id="likeByVideoTitle" resultMap="VideoDtoMap">
+    select
+	<include refid="videoDtoColumns"/>
+    from `videos`
+    left join `admins` on `videos`.admin_id = `admins`.admin_id
+    <where>
+    	<if test="videoTitle != null">
+    		video_title like concat('%',#{videoTitle},'%')
+  		</if>
+    	<if test="start!=null and pageSize!=null">
+    		LIMIT #{start},#{pageSize}
+  		</if>
+    </where>
+  </select>
+  
+  <select id="selectVideoAndCommentsByVideoId" resultMap="VideoDetailDtoMap">
+    select
+	<include refid="videoDetailDtoColumns"/>
+    from `videos`
+    left join `admins` on `videos`.admin_id = `admins`.admin_id
+    where video_id = #{videoId,jdbcType=VARCHAR}
+  </select>
+  
+</mapper>

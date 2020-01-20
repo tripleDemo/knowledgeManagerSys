@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<settings>
+		<setting name="mapUnderscoreToCamelCase" value="true"/>
+	</settings>
+	
+	<!-- 别名配置 -->
+	<typeAliases>
+		<!-- 批量配置别名：指定批量定义别名的类包，别名为类名(首字母大小写都可) -->
+		<package name="com.huashang.core.pojo"/>
+	</typeAliases>
+	
+</configuration>

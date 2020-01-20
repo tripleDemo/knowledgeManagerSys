@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huashang.core.mapper.UsersMapper">
+  <resultMap id="BaseResultMap" type="Users">
+    <id column="user_id" jdbcType="VARCHAR" property="userId" />
+    <result column="username" jdbcType="VARCHAR" property="username" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="email" jdbcType="VARCHAR" property="email" />
+    <result column="created_at" jdbcType="TIMESTAMP" property="createdAt" />
+    <result column="updated_at" jdbcType="TIMESTAMP" property="updatedAt" />
+  </resultMap>
+  
+  <sql id="usersColumns">
+  	user_id, username, password, email, created_at, updated_at
+  </sql>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from `users`
+    where user_id = #{userId,jdbcType=VARCHAR}
+  </delete>
+  
+  <insert id="insert" keyColumn="user_id" keyProperty="userId" parameterType="Users" useGeneratedKeys="true">
+    insert into `users` (user_id, username, password, email, created_at)
+    values (#{userId,jdbcType=VARCHAR}, #{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, 
+      #{createdAt,jdbcType=TIMESTAMP})
+  </insert>
+  
+  <update id="updateByPrimaryKey" parameterType="Users">
+    update `users`
+    set username = #{username,jdbcType=VARCHAR},
+      password = #{password,jdbcType=VARCHAR},
+      email = #{email,jdbcType=VARCHAR},
+      created_at = #{createdAt,jdbcType=TIMESTAMP},
+      updated_at = #{updatedAt,jdbcType=TIMESTAMP}
+    where user_id = #{userId,jdbcType=VARCHAR}
+  </update>
+  
+  <update id="updateUserPassword">
+    update `users`
+    set password = #{encryptPwd,jdbcType=VARCHAR}
+    where email = #{email,jdbcType=VARCHAR}
+  </update>
+  
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+	<include refid="usersColumns"/>
+    from `users`
+    where user_id = #{userId,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="selectByUsername" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="usersColumns"/>
+    from `users`
+    where username = #{username,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="selectAll" resultMap="BaseResultMap">
+    select
+	<include refid="usersColumns"/>
+    from `users`
+  </select>
+  
+  <select id="likeByUsername" resultMap="BaseResultMap">
+    select
+	<include refid="usersColumns"/>
+    from `users`
+    <where>
+    	<if test="username != null">
+    		username like concat('%',#{username},'%')
+  		</if>
+    	<if test="start!=null and pageSize!=null">
+    		LIMIT #{start},#{pageSize}
+  		</if>
+    </where>
+  </select>
+  
+</mapper>

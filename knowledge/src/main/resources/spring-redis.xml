@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:cache="http://www.springframework.org/schema/cache"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                        http://www.springframework.org/schema/beans/spring-beans.xsd
+                        http://www.springframework.org/schema/context
+                        http://www.springframework.org/schema/context/spring-context.xsd
+                        http://www.springframework.org/schema/cache
+                        http://www.springframework.org/schema/cache/spring-cache.xsd">
+
+	
+	<bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">
+        <!-- 一个pool最多可分配多少各jedis实例 -->
+        <property name="maxTotal" value="${redis.maxTotal}"></property>    
+        <!-- 连接池中最多可空闲maxIdle个连接，表示即使没连接依然可保持maxIdle个空闲连接 -->
+        <property name="maxIdle" value="${redis.maxIdle}"></property>    
+        <!-- 最大等待时间 -->
+        <property name="maxWaitMillis" value="${redis.maxWaitMillis}"></property>    
+        <!-- 检查有效性 -->
+        <property name="testOnBorrow" value="${redis.testOnBorrow}"></property>    
+    </bean>
+    
+    <!-- 创建redis连接池 -->
+    <bean id="jedisWritePool" class="com.huashang.common.utils.JedisPoolWriper" depends-on="jedisPoolConfig">
+        <constructor-arg index="0" ref="jedisPoolConfig"></constructor-arg>    
+        <constructor-arg index="1" value="${redis.host}"></constructor-arg>    
+        <constructor-arg index="2" value="${redis.port}" type="int"></constructor-arg>    
+    </bean>
+    
+    <!-- 创建redis工具类，封装好redis连接进行相关的操作 -->
+    <bean id="jedisUtil" class="com.huashang.common.utils.JedisUtil" scope="singleton"> 
+        <property name="jedisPool">
+            <ref bean="jedisWritePool"/>
+        </property>
+    </bean>
+    
+    <!-- redis的key操作 -->
+    <bean id="jedisKeys" class="com.huashang.common.utils.JedisUtil$Keys" scope="singleton">
+        <constructor-arg ref="jedisUtil"></constructor-arg>
+    </bean>
+    <!-- redis的string操作 -->
+    <bean id="jedisStrings" class="com.huashang.common.utils.JedisUtil$Strings" scope="singleton">
+        <constructor-arg ref="jedisUtil"></constructor-arg>
+	</bean>
+</beans>

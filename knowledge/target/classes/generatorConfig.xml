@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+  PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+  "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+	<context id="DB2Tables" targetRuntime="MyBatis3Simple">
+		<!-- 生成的Java文件的编码 -->
+		<property name="javaFileEncoding" value="UTF-8" />
+		<!-- beginningDelimiter和endingDelimiter指明数据库的用于标记数据库对象名的符号，比如ORACLE就是双引号，MYSQL默认是`反引号 -->
+		<property name="beginningDelimiter" value="`" />
+		<property name="endingDelimiter" value="`" />
+
+		<!-- 注释生成器 -->
+		<commentGenerator>
+			<property name="suppressDate" value="true" />
+			<property name="suppressAllComments" value="true" />
+		</commentGenerator>
+
+		<!-- 必须要有的，使用这个配置链接数据库 -->
+		<jdbcConnection driverClass="com.mysql.cj.jdbc.Driver"
+			connectionURL="jdbc:mysql://localhost:3306/knowledge?characterEncoding=UTF-8&amp;serverTimezone=UTC" userId="root"
+			password="123456">
+		</jdbcConnection>
+
+		<!-- 生成domain对象 -->
+		<javaModelGenerator
+			targetPackage="com.huashang.core.pojo" targetProject="src/main/java">
+			<property name="enableSubPackages" value="true" />
+		</javaModelGenerator>
+
+		<!-- 生成Mapper文件 -->
+		<sqlMapGenerator targetPackage="mapper"
+			targetProject="src/main/resources">
+			<property name="enableSubPackages" value="true" />
+		</sqlMapGenerator>
+
+		<!-- 生成Mapper接口 -->
+		<javaClientGenerator type="XMLMAPPER"
+			targetPackage="com.huashang.core.mapper" targetProject="src/main/java">
+			<property name="enableSubPackages" value="true" />
+		</javaClientGenerator>
+
+		<!-- tables -->
+		<!-- ================================================================================ -->
+		<table tableName="admins" delimitIdentifiers="true"
+			domainObjectName="Admins">
+			<property name="useActualColumnNames" value="false" />
+			<!-- JDBC：相当于在生成的insert元素上添加useGeneratedKeys="true"和keyProperty属性 -->
+			<generatedKey column="admin_id" sqlStatement="JDBC" />
+		</table>
+		<table tableName="videos" delimitIdentifiers="true"
+			domainObjectName="Videos">
+			<property name="useActualColumnNames" value="false" />
+			<generatedKey column="video_id" sqlStatement="JDBC" />
+		</table>
+		<table tableName="users" delimitIdentifiers="true"
+			domainObjectName="Users">
+			<property name="useActualColumnNames" value="false" />
+			<generatedKey column="user_id" sqlStatement="JDBC" />
+		</table>
+		<table tableName="comments" delimitIdentifiers="true"
+			domainObjectName="Informations">
+			<property name="useActualColumnNames" value="false" />
+			<generatedKey column="comment_id" sqlStatement="JDBC" />
+		</table>
+		<!-- ================================================================================ -->
+	</context>
+</generatorConfiguration>
